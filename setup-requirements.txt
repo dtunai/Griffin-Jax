@@ -3,6 +3,6 @@ click-help-colors>=0.9.1,<0.10
 rich>=11.0,<14.0
 jax==0.4.24
 jaxlib==0.4.24
-einops==0.6.1
+einops==0.7.0
 flas==0.8.1
 numpy==1.26.3
