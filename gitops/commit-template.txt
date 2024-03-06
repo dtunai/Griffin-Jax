@@ -1,0 +1,4 @@
+[TYPE] Brief description of the change
+
+- Detailed explanation of the change
+- Additional context or information if necessary
