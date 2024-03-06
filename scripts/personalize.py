@@ -99,7 +99,7 @@ def main(
         (BASE_URL_TO_REPLACE, repo_url),
         (REPO_NAME_TO_REPLACE, github_repo),
         ("my-package", package_actual_name),
-        ("my_package", package_dir_name),
+        ("griffin_jax", package_dir_name),
     ]
     if dry_run:
         for old, new in replacements:
@@ -108,11 +108,11 @@ def main(
         if path.resolve() not in FILES_TO_REMOVE:
             personalize_file(path, dry_run, replacements)
 
-    # Rename 'my_package' directory to `package_dir_name`.
+    # Rename 'griffin_jax' directory to `package_dir_name`.
     if not dry_run:
-        (REPO_BASE / "my_package").replace(REPO_BASE / package_dir_name)
+        (REPO_BASE / "griffin_jax").replace(REPO_BASE / package_dir_name)
     else:
-        print(f"Renaming 'my_package' directory to '{package_dir_name}'")
+        print(f"Renaming 'griffin_jax' directory to '{package_dir_name}'")
 
     # Start with a fresh README.
     readme_contents = f"""# {package_actual_name}\n"""
