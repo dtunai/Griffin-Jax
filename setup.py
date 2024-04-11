@@ -9,12 +9,12 @@ with open("setup-requirements.txt", "r") as req_file:
 setup(
     name="griffin_jax",
     version="0.1.0",
-    author="attophyd",
-    author_email="attophyd@gmail.com",
+    author="simudt",
+    author_email="simudt@gmail.com",
     description="Packaged version of Griffin for Jax + Flax.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/attophyd/griffin-jax",
+    url="https://github.com/simudt/griffin-jax",
     packages=find_packages(),
     install_requires=install_requires,
     classifiers=[
