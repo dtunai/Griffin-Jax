@@ -63,6 +63,12 @@ class RGLRU(nn.Module):
     def setup(self):
         self.c = 8
         key = random.PRNGKey(0)
+
+        def custom_lambda_init(key, shape):
+            a_c_values = random.uniform(key, shape, minval=0.9, maxval=0.999)
+            lambda_values = -jnp.log((1 / a_c_values) ** (1 / self.c) - 1)
+            return lambda_values
+
         self.Wa = self.param(
             "Wa", nn.initializers.xavier_uniform(), (self.dim * self.mult, self.dim)
         )
@@ -71,11 +77,8 @@ class RGLRU(nn.Module):
         )
         self.ba = self.param("ba", nn.initializers.zeros, (self.dim * self.mult,))
         self.bx = self.param("bx", nn.initializers.zeros, (self.dim * self.mult,))
-        self.Lambda = self.param(
-            "Lambda",
-            nn.initializers.uniform(minval=expit(0.9), maxval=expit(0.999)),
-            (self.dim * self.mult,),
-        )
+        self.Lambda = self.param("Lambda", custom_lambda_init, (self.dim * self.mult,))
+
 
     @nn.compact
     def __call__(self, x):
@@ -87,9 +90,8 @@ class RGLRU(nn.Module):
             xt = x[:, t, :]
             rt = jax.nn.sigmoid(jnp.dot(xt, self.Wa) + self.ba)
             it = jax.nn.sigmoid(jnp.dot(xt, self.Wx) + self.bx)
-            a = jax.nn.sigmoid(self.Lambda)
-            at = a / self.c**rt
-            ht = at * ht + ((1 - at**2) ** 0.5) * (it * xt)
+            a_t = jnp.exp(-self.c * jax.nn.softplus(-self.Lambda) * rt)
+            ht = a_t * ht + ((1 - a_t**2) ** 0.5) * (it * xt)
             y.append(ht[jnp.newaxis, :])
 
         y = jnp.concatenate(y, axis=1)
